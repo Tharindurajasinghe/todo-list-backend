@@ -1,37 +1,14 @@
 import tkinter as tk
-from tkinter import messagebox, simpledialog
-import json
-import os
+from tkinter import messagebox
+from auth import login, save_data
 
-# -------------------- FILE HANDLING --------------------
-FILE_NAME = "tasks.json"
-
-def load_data():
-    if not os.path.exists(FILE_NAME):
-        with open(FILE_NAME, "w") as f:
-            json.dump({}, f)
-    with open(FILE_NAME, "r") as f:
-        return json.load(f)
-
-def save_data(data):
-    with open(FILE_NAME, "w") as f:
-        json.dump(data, f, indent=4)
-
-# -------------------- LOGIN --------------------
+# -------------------- APP WINDOW --------------------
 root = tk.Tk()
 root.title("To-Do List App")
 root.geometry("700x500")
 
-username = simpledialog.askstring("Login", "Enter Username:")
-
-if not username:
-    root.destroy()
-    exit()
-
-data = load_data()
-if username not in data:
-    data[username] = []
-    save_data(data)
+# -------------------- LOGIN --------------------
+username, data = login(root)
 
 # -------------------- FUNCTIONS --------------------
 def refresh_list():
@@ -146,5 +123,5 @@ task_list.pack(pady=10)
 task_list.bind("<<ListboxSelect>>", load_selected)
 
 refresh_list()
-
 root.mainloop()
+
